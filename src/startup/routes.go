@@ -11,4 +11,5 @@ func initRoutes() {
 	router.HandleFunc("/ping", ping.Ping)
 
 	router.HandleFunc("/users", users.CreateUser).Methods(http.MethodPost)
+	router.HandleFunc("/users/{userId}", users.GetUser).Methods(http.MethodGet)
 }

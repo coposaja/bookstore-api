@@ -35,3 +35,12 @@ func NewBadRequestError(message string) RestError {
 		ErrorTitle:   "bad_request",
 	}
 }
+
+// NewNotFoundError return a RestError interface
+func NewNotFoundError(message string) RestError {
+	return restError{
+		ErrorMessage: message,
+		ErrorStatus:  http.StatusNotFound,
+		ErrorTitle:   "not_found",
+	}
+}
