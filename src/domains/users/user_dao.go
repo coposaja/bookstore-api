@@ -3,6 +3,7 @@ package users
 import (
 	"fmt"
 
+	"github.com/coposaja/bookstore-api/src/utils/date"
 	"github.com/coposaja/bookstore-api/src/utils/rerr"
 )
 
@@ -18,6 +19,7 @@ func (user *User) Save() rerr.RestError {
 		}
 	}
 
+	user.DateCreated = date.GetNowString()
 	userDB[user.ID] = user
 	return nil
 }
