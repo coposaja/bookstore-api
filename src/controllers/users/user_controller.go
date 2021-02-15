@@ -6,6 +6,7 @@ import (
 
 	"github.com/coposaja/bookstore-api/src/domains/users"
 	"github.com/coposaja/bookstore-api/src/services"
+	"github.com/coposaja/bookstore-api/src/utils/rerr"
 	"github.com/coposaja/bookstore-api/src/utils/response"
 )
 
@@ -13,7 +14,8 @@ import (
 func CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user users.User
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
-		response.RespondJSON(w, http.StatusBadRequest, "Invalid JSON body")
+		restErr := rerr.NewBadRequestError("Invalid JSON body")
+		response.RespondError(w, restErr)
 		return
 	}
 
