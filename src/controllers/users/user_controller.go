@@ -21,7 +21,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 
 	result, saveErr := services.UserService.CreateUser(user)
 	if saveErr != nil {
-		response.RespondJSON(w, http.StatusBadRequest, "Some errors")
+		response.RespondError(w, saveErr)
 		return
 	}
 
