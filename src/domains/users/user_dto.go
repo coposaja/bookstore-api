@@ -14,6 +14,7 @@ type User struct {
 	LastName    string    `json:"lastName"`
 	Email       string    `json:"email"`
 	DateCreated time.Time `json:"dateCreated"`
+	Status      string    `json:"status"`
 }
 
 // Validate method to validate User struct

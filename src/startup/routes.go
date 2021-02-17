@@ -14,4 +14,5 @@ func initRoutes() {
 	router.HandleFunc("/users/{userId}", users.GetUser).Methods(http.MethodGet)
 	router.HandleFunc("/users/{userId}", users.UpdateUser).Methods(http.MethodPut)
 	router.HandleFunc("/users/{userId}", users.DeleteUser).Methods(http.MethodDelete)
+	router.HandleFunc("/internal/users/search", users.Search).Methods(http.MethodGet)
 }

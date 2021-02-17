@@ -73,7 +73,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	response.RespondJSON(w, http.StatusCreated, result)
 }
 
-// DeleteUser handler to create a User
+// DeleteUser handler to delete a User
 func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	userID, err := strconv.ParseInt(mux.Vars(r)["userId"], 10, 64)
 	if err != nil {
@@ -89,4 +89,17 @@ func DeleteUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response.RespondJSON(w, http.StatusOK, nil)
+}
+
+// Search handler to search users by certain parameter
+func Search(w http.ResponseWriter, r *http.Request) {
+	status := r.URL.Query().Get("status")
+
+	users, err := services.UserService.Search(status)
+	if err != nil {
+		response.RespondError(w, err)
+		return
+	}
+
+	response.RespondJSON(w, http.StatusOK, users)
 }

@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/coposaja/bookstore-api/src/domains/users"
+	"github.com/coposaja/bookstore-api/src/utils/date"
 	"github.com/coposaja/bookstore-api/src/utils/rerr"
 )
 
@@ -12,12 +13,17 @@ type userServiceInterface interface {
 	GetUser(int) (*users.User, rerr.RestError)
 	UpdateUser(users.User, int) (*users.User, rerr.RestError)
 	DeleteUser(int) rerr.RestError
+	Search(string) ([]users.User, rerr.RestError)
 }
 
 func (s *userService) CreateUser(user users.User) (*users.User, rerr.RestError) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
+
+	user.DateCreated = date.GetNow()
+	user.Status = users.UserStatusActive
+
 	if err := user.Save(); err != nil {
 		return nil, err
 	}
@@ -43,6 +49,7 @@ func (s *userService) UpdateUser(user users.User, userID int) (*users.User, rerr
 	curr.FirstName = user.FirstName
 	curr.LastName = user.LastName
 	curr.Email = user.Email
+	curr.Status = user.Status
 
 	if err := curr.Validate(); err != nil {
 		return nil, err
@@ -57,4 +64,9 @@ func (s *userService) UpdateUser(user users.User, userID int) (*users.User, rerr
 func (s *userService) DeleteUser(userID int) rerr.RestError {
 	user := &users.User{ID: userID}
 	return user.Delete()
+}
+
+func (s *userService) Search(status string) ([]users.User, rerr.RestError) {
+	user := &users.User{}
+	return user.Search(status)
 }
