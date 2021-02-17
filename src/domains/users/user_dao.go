@@ -44,10 +44,37 @@ func (user *User) Get() rerr.RestError {
 	}
 
 	result := query.QueryRow(user.ID)
-	if err := result.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.DateCreated); err != nil {
+	if err := result.Scan(
+		&user.ID,
+		&user.FirstName,
+		&user.LastName,
+		&user.Email,
+		&user.DateCreated,
+	); err != nil {
 		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to get User Id %d: %s", user.ID, err.Error()))
 	}
 
 	defer query.Close()
+	return nil
+}
+
+// Update User data
+func (user *User) Update() rerr.RestError {
+	query, err := mysql.Client.Prepare("UPDATE users SET FirstName = ?, LastName = ?, Email = ? WHERE Id = ?")
+	if err != nil {
+		return rerr.NewInternalServerError(err.Error())
+	}
+	defer query.Close()
+
+	_, err = query.Exec(
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.ID,
+	)
+	if err != nil {
+		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to update User id %d: %s", user.ID, err.Error()))
+	}
+
 	return nil
 }
