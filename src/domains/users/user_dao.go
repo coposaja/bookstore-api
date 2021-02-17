@@ -78,3 +78,19 @@ func (user *User) Update() rerr.RestError {
 
 	return nil
 }
+
+// Delete User data
+func (user *User) Delete() rerr.RestError {
+	query, err := mysql.Client.Prepare("DELETE FROM users WHERE Id = ?")
+	if err != nil {
+		return rerr.NewInternalServerError(err.Error())
+	}
+	defer query.Close()
+
+	_, err = query.Exec(user.ID)
+	if err != nil {
+		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to delete User id %d: %s", user.ID, err.Error()))
+	}
+
+	return nil
+}

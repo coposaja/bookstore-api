@@ -11,6 +11,7 @@ type userServiceInterface interface {
 	CreateUser(users.User) (*users.User, rerr.RestError)
 	GetUser(int) (*users.User, rerr.RestError)
 	UpdateUser(users.User, int) (*users.User, rerr.RestError)
+	DeleteUser(int) rerr.RestError
 }
 
 func (s *userService) CreateUser(user users.User) (*users.User, rerr.RestError) {
@@ -51,4 +52,9 @@ func (s *userService) UpdateUser(user users.User, userID int) (*users.User, rerr
 	}
 
 	return curr, nil
+}
+
+func (s *userService) DeleteUser(userID int) rerr.RestError {
+	user := &users.User{ID: userID}
+	return user.Delete()
 }
