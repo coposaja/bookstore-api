@@ -26,7 +26,7 @@ func Connect() {
 		err error
 	)
 
-	dataSource := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8",
+	dataSource := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=true",
 		username, password, host, schema,
 	)
 

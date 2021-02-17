@@ -44,3 +44,12 @@ func NewNotFoundError(message string) RestError {
 		ErrorTitle:   "not_found",
 	}
 }
+
+// NewInternalServerError return a RestError interface
+func NewInternalServerError(message string) RestError {
+	return restError{
+		ErrorMessage: message,
+		ErrorStatus:  http.StatusInternalServerError,
+		ErrorTitle:   "internal_server_error",
+	}
+}

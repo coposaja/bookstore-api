@@ -3,38 +3,51 @@ package users
 import (
 	"fmt"
 
+	"github.com/coposaja/bookstore-api/src/db/mysql"
 	"github.com/coposaja/bookstore-api/src/utils/date"
 	"github.com/coposaja/bookstore-api/src/utils/rerr"
 )
 
-var (
-	userDB = make(map[int]*User)
-)
-
 // Save User to DB
 func (user *User) Save() rerr.RestError {
-	for _, v := range userDB {
-		if v.Email == user.Email {
-			return rerr.NewBadRequestError(fmt.Sprintf("User with email %s already exists", user.Email))
-		}
+	query, err := mysql.Client.Prepare("INSERT INTO users (FirstName, LastName, Email, DateCreated) VALUES (?, ?, ?, ?)")
+	if err != nil {
+		return rerr.NewInternalServerError(err.Error())
+	}
+	defer query.Close()
+	user.DateCreated = date.GetNow()
+
+	insertResult, err := query.Exec(
+		user.FirstName,
+		user.LastName,
+		user.Email,
+		user.DateCreated,
+	)
+	if err != nil {
+		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to save User: %s", err.Error()))
 	}
 
-	user.DateCreated = date.GetNowString()
-	userDB[user.ID] = user
+	uid, err := insertResult.LastInsertId()
+	if err != nil {
+		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to save User: %s", err.Error()))
+	}
+
+	user.ID = int(uid)
 	return nil
 }
 
 // Get User from DB by UserID
 func (user *User) Get() rerr.RestError {
-	current := userDB[user.ID]
-	if current == nil {
-		return rerr.NewNotFoundError(fmt.Sprintf("User with id %d is not found", user.ID))
+	query, err := mysql.Client.Prepare("SELECT Id, FirstName, LastName, Email, DateCreated FROM users WHERE Id = ?")
+	if err != nil {
+		return rerr.NewInternalServerError(err.Error())
 	}
 
-	user.FirstName = current.FirstName
-	user.LastName = current.LastName
-	user.Email = current.Email
-	user.DateCreated = current.DateCreated
+	result := query.QueryRow(user.ID)
+	if err := result.Scan(&user.ID, &user.FirstName, &user.LastName, &user.Email, &user.DateCreated); err != nil {
+		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to get User Id %d: %s", user.ID, err.Error()))
+	}
 
+	defer query.Close()
 	return nil
 }

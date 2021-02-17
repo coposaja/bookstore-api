@@ -2,17 +2,18 @@ package users
 
 import (
 	"strings"
+	"time"
 
 	"github.com/coposaja/bookstore-api/src/utils/rerr"
 )
 
 // User struct representing User
 type User struct {
-	ID          int    `json:"id"`
-	FirstName   string `json:"firstName"`
-	LastName    string `json:"lastName"`
-	Email       string `json:"email"`
-	DateCreated string `json:"dateCreated"`
+	ID          int       `json:"id"`
+	FirstName   string    `json:"firstName"`
+	LastName    string    `json:"lastName"`
+	Email       string    `json:"email"`
+	DateCreated time.Time `json:"dateCreated"`
 }
 
 // Validate method to validate User struct
