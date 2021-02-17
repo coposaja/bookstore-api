@@ -50,6 +50,7 @@ func (s *userService) UpdateUser(user users.User, userID int) (*users.User, rerr
 	curr.LastName = user.LastName
 	curr.Email = user.Email
 	curr.Status = user.Status
+	curr.Passowrd = user.Passowrd
 
 	if err := curr.Validate(); err != nil {
 		return nil, err

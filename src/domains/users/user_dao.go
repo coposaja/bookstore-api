@@ -14,7 +14,7 @@ const (
 
 // Save User to DB
 func (user *User) Save() rerr.RestError {
-	query, err := mysql.Client.Prepare("INSERT INTO users (FirstName, LastName, Email, DateCreated, Status) VALUES (?, ?, ?, ?, ?)")
+	query, err := mysql.Client.Prepare("INSERT INTO users (FirstName, LastName, Email, DateCreated, Status, Password) VALUES (?, ?, ?, ?, ?, ?)")
 	if err != nil {
 		return rerr.NewInternalServerError(err.Error())
 	}
@@ -26,6 +26,7 @@ func (user *User) Save() rerr.RestError {
 		user.Email,
 		user.DateCreated,
 		user.Status,
+		user.Passowrd,
 	)
 	if err != nil {
 		return rerr.NewInternalServerError(fmt.Sprintf("Error while trying to save User: %s", err.Error()))
@@ -65,7 +66,7 @@ func (user *User) Get() rerr.RestError {
 
 // Update User data
 func (user *User) Update() rerr.RestError {
-	query, err := mysql.Client.Prepare("UPDATE users SET FirstName = ?, LastName = ?, Email = ?, Status = ? WHERE Id = ?")
+	query, err := mysql.Client.Prepare("UPDATE users SET FirstName = ?, LastName = ?, Email = ?, Status = ?, Password = ? WHERE Id = ?")
 	if err != nil {
 		return rerr.NewInternalServerError(err.Error())
 	}
@@ -76,6 +77,7 @@ func (user *User) Update() rerr.RestError {
 		user.LastName,
 		user.Email,
 		user.Status,
+		user.Passowrd,
 		user.ID,
 	)
 	if err != nil {
