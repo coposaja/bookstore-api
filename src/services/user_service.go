@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/coposaja/bookstore-api/src/domains/users"
+	"github.com/coposaja/bookstore-api/src/utils/crypto"
 	"github.com/coposaja/bookstore-api/src/utils/date"
 	"github.com/coposaja/bookstore-api/src/utils/rerr"
 )
@@ -17,7 +18,13 @@ type userServiceInterface interface {
 }
 
 func (s *userService) CreateUser(user users.User) (*users.User, rerr.RestError) {
-	if err := user.Validate(); err != nil {
+	err := user.Validate()
+	if err != nil {
+		return nil, err
+	}
+
+	user.Passowrd, err = crypto.HashAndSalt(user.Passowrd)
+	if err != nil {
 		return nil, err
 	}
 
@@ -46,11 +53,15 @@ func (s *userService) UpdateUser(user users.User, userID int) (*users.User, rerr
 		return nil, err
 	}
 
+	curr.Passowrd, err = crypto.HashAndSalt(user.Passowrd)
+	if err != nil {
+		return nil, err
+	}
+
 	curr.FirstName = user.FirstName
 	curr.LastName = user.LastName
 	curr.Email = user.Email
 	curr.Status = user.Status
-	curr.Passowrd = user.Passowrd
 
 	if err := curr.Validate(); err != nil {
 		return nil, err
