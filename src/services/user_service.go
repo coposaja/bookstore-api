@@ -14,7 +14,7 @@ type userServiceInterface interface {
 	GetUser(int) (*users.User, rerr.RestError)
 	UpdateUser(users.User, int) (*users.User, rerr.RestError)
 	DeleteUser(int) rerr.RestError
-	Search(string) ([]users.User, rerr.RestError)
+	Search(string) (users.Users, rerr.RestError)
 }
 
 func (s *userService) CreateUser(user users.User) (*users.User, rerr.RestError) {
@@ -78,7 +78,7 @@ func (s *userService) DeleteUser(userID int) rerr.RestError {
 	return user.Delete()
 }
 
-func (s *userService) Search(status string) ([]users.User, rerr.RestError) {
+func (s *userService) Search(status string) (users.Users, rerr.RestError) {
 	user := &users.User{}
 	return user.Search(status)
 }

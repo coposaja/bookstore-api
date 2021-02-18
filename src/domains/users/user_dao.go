@@ -104,7 +104,7 @@ func (user *User) Delete() rerr.RestError {
 }
 
 // Search User data using certain parameter
-func (user *User) Search(status string) ([]User, rerr.RestError) {
+func (user *User) Search(status string) (Users, rerr.RestError) {
 	query, err := mysql.Client.Prepare("SELECT Id, FirstName, LastName, Email, DateCreated, Status FROM users WHERE Status = ?")
 	if err != nil {
 		return nil, rerr.NewInternalServerError(err.Error())

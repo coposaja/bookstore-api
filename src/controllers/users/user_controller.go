@@ -27,7 +27,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.RespondJSON(w, http.StatusCreated, result)
+	response.RespondJSON(w, http.StatusCreated, result.Marshall(false))
 }
 
 // GetUser handler to create a User
@@ -45,7 +45,7 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.RespondJSON(w, http.StatusOK, user)
+	response.RespondJSON(w, http.StatusOK, user.Marshall(false))
 }
 
 // UpdateUser handler to update User data
@@ -70,7 +70,7 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.RespondJSON(w, http.StatusCreated, result)
+	response.RespondJSON(w, http.StatusCreated, result.Marshall(false))
 }
 
 // DeleteUser handler to delete a User
@@ -101,5 +101,5 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response.RespondJSON(w, http.StatusOK, users)
+	response.RespondJSON(w, http.StatusOK, users.Marshall(true))
 }
